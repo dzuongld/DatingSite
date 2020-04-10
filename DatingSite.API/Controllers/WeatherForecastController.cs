@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -24,6 +23,7 @@ namespace DatingSite.API.Controllers
             _logger = logger;
         }
 
+        // return GET request
         [HttpGet]
         public IEnumerable<WeatherForecast> Get()
         {
