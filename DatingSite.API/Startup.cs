@@ -1,10 +1,13 @@
+using System.Text;
 using DatingSite.API.Data;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 
 namespace DatingSite.API
 {
@@ -28,6 +31,21 @@ namespace DatingSite.API
 
             // * fix 'no access control allow origin'
             services.AddCors();
+
+            // * an instance is created once per request
+            services.AddScoped<IAuthRepository, AuthRepository>();
+
+            // * authentication
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetSection("AppSettings:Token").Value)),
+                    ValidateIssuer = false, // localhost
+                    ValidateAudience = false
+                };
+            });
         }
 
         // * Middlewares
@@ -45,6 +63,9 @@ namespace DatingSite.API
 
             // for development purposes
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
+            // *authorization
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
