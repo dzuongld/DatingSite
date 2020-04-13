@@ -1,25 +1,14 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <a
-        class="navbar-brand"
-        href="#"
-    >Let's Date</a>
-    <button
-        class="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target="#navbarsExampleDefault"
-        aria-controls="navbarsExampleDefault"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-    >
-        <span class="navbar-toggler-icon"></span>
-    </button>
+    <div class="container">
+        <a
+            class="navbar-brand"
+            href="#"
+        >Let's Date</a>
 
-    <div
-        class="collapse navbar-collapse"
-        id="navbarsExampleDefault"
-    >
-        <ul class="navbar-nav mr-auto">
+        <ul
+            *ngIf="loggedIn()"
+            class="navbar-nav mr-auto"
+        >
             <li class="nav-item active">
                 <a
                     class="nav-link"
@@ -45,24 +34,30 @@
         <div
             *ngIf="loggedIn()"
             class="dropdown"
+            dropdown
         >
             <a
                 class="dropdown-toggle text-light"
                 id="dropdownMenuButton"
                 data-toggle="dropdown"
+                dropdownToggle
             >
-                Welcome User<i class="fa fa-user"></i>
+                Welcome {{ getName() |titlecase }}
             </a>
-            <div class="dropdown-menu">
+            <div
+                class="dropdown-menu mt-3"
+                *dropdownMenu
+            >
                 <a
                     class="dropdown-item"
                     href="#"
-                >Edit Profile</a>
+                >Edit Profile<i class="fa fa-user ml-1"></i></a>
+
                 <div class="dropdown-divider"></div>
                 <a
                     class="dropdown-item"
                     (click)="logout()"
-                ><i class="fa fa-sign-out"></i>Logout</a>
+                >Logout<i class="fa fa-sign-out ml-1"></i></a>
             </div>
         </div>
 
