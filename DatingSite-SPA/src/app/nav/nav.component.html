@@ -2,31 +2,38 @@
     <div class="container">
         <a
             class="navbar-brand"
-            href="#"
+            [routerLink]="['/']"
         >Let's Date</a>
 
         <ul
             *ngIf="loggedIn()"
             class="navbar-nav mr-auto"
         >
-            <li class="nav-item active">
+            <li
+                class="nav-item"
+                routerLinkActive="active"
+            >
                 <a
                     class="nav-link"
-                    href="#"
+                    [routerLink]="['/members']"
                 >Matches </a>
             </li>
-            <li class="nav-item">
+            <li
+                class="nav-item"
+                routerLinkActive="active"
+            >
                 <a
                     class="nav-link"
-                    href="#"
+                    [routerLink]="['/lists']"
                 >Lists</a>
             </li>
-            <li class="nav-item">
+            <li
+                class="nav-item"
+                routerLinkActive="active"
+            >
                 <a
                     class="nav-link"
-                    href="#"
-                    tabindex="-1"
-                    aria-disabled="true"
+                    [routerLink]="['/messages']"
                 >Messages</a>
             </li>
         </ul>
@@ -42,7 +49,7 @@
                 data-toggle="dropdown"
                 dropdownToggle
             >
-                Welcome {{ getName() |titlecase }}
+                Welcome {{ getName() | titlecase }}
             </a>
             <div
                 class="dropdown-menu mt-3"
