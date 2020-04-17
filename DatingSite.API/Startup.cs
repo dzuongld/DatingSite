@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text;
+using AutoMapper;
 using DatingSite.API.Data;
 using DatingSite.API.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -31,13 +32,21 @@ namespace DatingSite.API
             // * inform the app about data path - appsettings.json
             services.AddDbContext<DataContext>(x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(option =>
+            {
+                //* fix self referencing loop error
+                option.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            });
 
             // * fix 'no access control allow origin'
             services.AddCors();
 
+            // * automapper as a service
+            services.AddAutoMapper(typeof(DatingRepository).Assembly);
+
             // * an instance is created once per request
             services.AddScoped<IAuthRepository, AuthRepository>();
+            services.AddScoped<IDatingRepository, DatingRepository>();
 
             // * authentication
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
