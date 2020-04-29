@@ -11,5 +11,7 @@ namespace DatingSite.API.Data
         Task<bool> SaveAll();
         Task<IEnumerable<User>> GetUsers();
         Task<User> GetUser(int id);
+        Task<Photo> GetPhoto(int id);
+        Task<Photo> GetMainPhoto(int userId);
     }
 }

@@ -41,6 +41,9 @@ namespace DatingSite.API
             // * fix 'no access control allow origin'
             services.AddCors();
 
+            // * map Cloudinary settings from appsettings to helper class
+            services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
+
             // * automapper as a service
             services.AddAutoMapper(typeof(DatingRepository).Assembly);
 

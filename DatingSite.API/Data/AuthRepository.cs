@@ -14,7 +14,8 @@ namespace DatingSite.API.Data
         }
         public async Task<User> Login(string username, string password)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
+            // pass photos belonging to user
+            var user = await _context.Users.Include(p => p.Photos).FirstOrDefaultAsync(u => u.Username == username);
 
             if (user == null)
             {
