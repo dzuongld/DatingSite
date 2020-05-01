@@ -19,7 +19,7 @@ export class AuthService {
 
     constructor(private http: HttpClient) {}
 
-    login(model: any) {
+    login(model: User) {
         // transform response from backend using 'pipe'
         return this.http.post(this.baseUrl + 'login', model).pipe(
             map((response: any) => {
@@ -35,7 +35,7 @@ export class AuthService {
         )
     }
 
-    register(model: any) {
+    register(model: User) {
         return this.http.post(this.baseUrl + 'register', model)
     }
 
