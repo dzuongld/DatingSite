@@ -62,6 +62,9 @@ namespace DatingSite.API
                     ValidateAudience = false
                 };
             });
+
+            // * to update user's last active
+            services.AddScoped<LogUserActivity>();
         }
 
         // * Middlewares
