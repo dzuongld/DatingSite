@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DatingSite.API.Helpers;
 using DatingSite.API.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -41,10 +43,41 @@ namespace DatingSite.API.Data
             return user;
         }
 
-        public async Task<IEnumerable<User>> GetUsers()
+        public async Task<PagedList<User>> GetUsers(UserParams userParams)
         {
-            var users = await _context.Users.Include(p => p.Photos).ToListAsync();
-            return users;
+            // get users from context but not execute yet
+            var users = _context.Users.Include(p => p.Photos).OrderByDescending(u => u.LastActive).AsQueryable();
+
+            // exclude currently logged in user
+            users = users.Where(u => u.Id != userParams.UserId);
+            // exclude users of same gender
+            users = users.Where(u => u.Gender == userParams.Gender);
+            // include defined age range
+            if (userParams.MinAge != 18 || userParams.MaxAge != 99)
+            {
+                // oldest
+                var minDob = DateTime.Today.AddYears(-userParams.MaxAge - 1);
+                // younges
+                var maxDob = DateTime.Today.AddYears(-userParams.MinAge);
+
+                users = users.Where(u => u.DateOfBirth >= minDob && u.DateOfBirth <= maxDob);
+            }
+
+            if (!string.IsNullOrEmpty(userParams.OrderBy))
+            {
+                switch (userParams.OrderBy)
+                {
+                    case "created":
+                        users = users.OrderByDescending(u => u.Created);
+                        break;
+                    default:
+                        users = users.OrderByDescending(u => u.LastActive);
+                        break;
+                }
+            }
+
+            // return an instane of paged list with params
+            return await PagedList<User>.CreateAsync(users, userParams.PageNumber, userParams.PageSize);
         }
 
         public async Task<bool> SaveAll()

@@ -7,6 +7,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown'
 import { TabsModule } from 'ngx-bootstrap/tabs'
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker'
+import { PaginationModule } from 'ngx-bootstrap/pagination'
+import { ButtonsModule } from 'ngx-bootstrap/buttons'
 import { JwtModule } from '@auth0/angular-jwt'
 import { NgxGalleryModule } from 'ngx-gallery-9'
 import { FileUploadModule } from 'ng2-file-upload'
@@ -55,6 +57,8 @@ export function tokenGetter() {
         FileUploadModule,
         BsDropdownModule.forRoot(),
         BsDatepickerModule.forRoot(),
+        PaginationModule.forRoot(),
+        ButtonsModule.forRoot(),
         RouterModule.forRoot(appRoutes),
         JwtModule.forRoot({
             config: {
