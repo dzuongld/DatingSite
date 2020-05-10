@@ -38,6 +38,11 @@ namespace DatingSite.API.Helpers
             CreateMap<PhotoForCreationDto, Photo>();
 
             CreateMap<UserForRegisterDto, User>();
+
+            CreateMap<MessageForCreationDto, Message>();
+            CreateMap<Message, MessageToReturnDto>()
+                .ForMember(memberOptions => memberOptions.SenderPhotoUrl, opt => opt.MapFrom(u => u.Sender.Photos.FirstOrDefault(p => p.IsMain).Url))
+                .ForMember(memberOptions => memberOptions.RecipientPhotoUrl, opt => opt.MapFrom(u => u.Recipient.Photos.FirstOrDefault(p => p.IsMain).Url));
         }
     }
 }
