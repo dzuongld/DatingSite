@@ -25,12 +25,36 @@ namespace DatingSite.API
 
         public IConfiguration Configuration { get; }
 
+        // databases config depending on environment
+        public void ConfigureDevelopmentServices(IServiceCollection services)
+        {
+            // * inform the app about data path - appsettings.json
+            services.AddDbContext<DataContext>(x =>
+            {
+                // *lazy loading
+                x.UseLazyLoadingProxies();
+                x.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
+
+            });
+
+
+            ConfigureServices(services);
+        }
+
+        public void ConfigureProductionServices(IServiceCollection services)
+        {
+            services.AddDbContext<DataContext>(x =>
+            {
+                x.UseLazyLoadingProxies();
+                x.UseMySql(Configuration.GetConnectionString("DefaultConnection"));
+            });
+            ConfigureServices(services);
+        }
+
         // * Dependencies injection
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // * inform the app about data path - appsettings.json
-            services.AddDbContext<DataContext>(x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddControllers().AddNewtonsoftJson(option =>
             {
@@ -100,16 +124,22 @@ namespace DatingSite.API
             app.UseRouting();
 
             // for development purposes
-            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().
+            AllowAnyHeader());
 
             // *authorization
             app.UseAuthentication();
-
             app.UseAuthorization();
+
+            // * serve static files
+            // will find wwwroot/index.html
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapFallbackToController("Index", "FallBack");
             });
         }
     }

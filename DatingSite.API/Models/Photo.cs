@@ -12,7 +12,7 @@ namespace DatingSite.API.Models
         public string PublicId { get; set; }
 
         // enforce cascade delete
-        public User User { get; set; }
+        public virtual User User { get; set; }
         public int UserId { get; set; }
     }
 }
