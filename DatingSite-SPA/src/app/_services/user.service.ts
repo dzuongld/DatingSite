@@ -77,8 +77,8 @@ export class UserService {
         return this.http.delete(this.baseUrl + 'users/' + userId + '/photos/' + id)
     }
 
-    sendLike(id: number, recipientId: number) {
-        return this.http.post(this.baseUrl + 'users/' + id + '/like/' + recipientId, {})
+    toggleLike(id: number, recipientId: number) {
+        return this.http.post(this.baseUrl + 'users/' + id + '/togglelike/' + recipientId, {})
     }
 
     getMessages(id: number, page?, itemsPerPage?, messageContainer?) {

@@ -50,4 +50,9 @@ export class ListsComponent implements OnInit {
         this.pagination.currentPage = event.page
         this.loadUsers()
     }
+
+    refreshList(id: number) {
+        const index = this.users.findIndex((user) => user.id === id)
+        this.users.splice(index, 1)
+    }
 }

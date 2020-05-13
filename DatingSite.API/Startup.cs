@@ -46,7 +46,7 @@ namespace DatingSite.API
             services.AddDbContext<DataContext>(x =>
             {
                 x.UseLazyLoadingProxies();
-                x.UseMySql(Configuration.GetConnectionString("DefaultConnection"));
+                x.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
             ConfigureServices(services);
         }
@@ -117,9 +117,11 @@ namespace DatingSite.API
                         }
                     });
                 });
+
+                // app.UseHsts();
             }
 
-            // app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
 
             app.UseRouting();
 

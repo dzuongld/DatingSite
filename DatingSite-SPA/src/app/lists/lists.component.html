@@ -26,9 +26,12 @@
     <div class="row">
         <div
             *ngFor="let user of users"
-            class="col-sm-6 col-md-4 col-lg-4 col-xl-2"
+            class="col-lg-3 col-md-4 col-sm-6"
         >
-            <app-member-card [user]="user"></app-member-card>
+            <app-member-card
+                [user]="user"
+                (likeRemoved)="refreshList($event)"
+            ></app-member-card>
         </div>
     </div>
 

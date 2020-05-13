@@ -29,7 +29,7 @@ namespace DatingSite.API.Controllers
 
         [HttpGet]
         // params from query string
-        public async Task<IActionResult> GetUsers([FromQuery]UserParams userParams)
+        public async Task<IActionResult> GetUsers([FromQuery] UserParams userParams)
         {
             var currentId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var userFromRepo = await _repo.GetUser(currentId);
@@ -79,7 +79,7 @@ namespace DatingSite.API.Controllers
             throw new Exception($"Updating user {id} failed on save");
         }
 
-        [HttpPost("{id}/like/{recipientId}")]
+        [HttpPost("{id}/togglelike/{recipientId}")]
         public async Task<IActionResult> LikeUser(int id, int recipientId)
         {
             if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
@@ -90,9 +90,17 @@ namespace DatingSite.API.Controllers
             var like = await _repo.GetLike(id, recipientId);
             if (like != null)
             {
-                return BadRequest("You already liked this user");
+                // unlike
+                _repo.Delete(like);
+
+                if (await _repo.SaveAll())
+                {
+                    return Ok(new { like = false });
+                }
+                return BadRequest("Cannot unlike this user");
             }
 
+            // like
             if (await _repo.GetUser(recipientId) == null)
             {
                 return NotFound();
@@ -107,10 +115,31 @@ namespace DatingSite.API.Controllers
             _repo.Add<Like>(like);
             if (await _repo.SaveAll())
             {
-                return Ok();
+                return Ok(new { like = true });
             }
 
             return BadRequest("Cannot send like");
+        }
+
+        [HttpPost("{id}/unlike/{recipientId}")]
+        public async Task<IActionResult> UnlikeUser(int id, int recipientId)
+        {
+            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            {
+                return Unauthorized();
+            }
+
+            var like = await _repo.GetLike(id, recipientId);
+            if (like != null)
+            {
+                _repo.Delete(like);
+                if (await _repo.SaveAll())
+                {
+                    return Ok();
+                }
+            }
+
+            return BadRequest("Cannot unlike this user");
         }
     }
 }
